@@ -37,34 +37,6 @@ For this project the world will always follow some rules:
 ## References / Src code
 related work with references to works found in a bibliographic search (articles, web pages and/or source code)
 
-## Search Problem
-formulation of the problem as a search problem (state representation, initial state, objective test, operators (names, preconditions, effects and costs), heuristics/evaluation function) or optimization problem (solution representation, neighborhood/mutation and crossover functions, hard constraints, evaluation functions)
+###  Solution Representation
 
-###  State Representation
-
-**State Representation**(T,P,D,C,U)
-* T = Truck coordinates
-* P = List of undelivered packages
-* D = Distance traveled
-* C = Cost so far
-* U = Penalties
-
-**Initial State** :  ((0,0), P, 0, 0, 0)
-In the beggining the truck is in the position (0,0), all packages are still to be delivered , the distance traveled is 0, there are still no late urgent deliveries, and therefore no cost.
-
-Since there is no advantage in moving the truck without delivering any package, the only operator needed is the operator move, which can be defined as following.
-
-**Name:** Move
-**Preconditions:** 
-* There are undelivered packages remaining
-
-**Effects**
-* Updates the Truck coordinates in the state
-* Removes the delivered package from the undelivered packages list
-* Increases the total distance travalled and associated cost
-* Increases the penalties cost if the delivered package is fragile and is broken.
-* Increases the penalties cost if any urgent packages is still to be delivered after schedule.
-
-**Cost** 
-
-
+The solution can be represented as a list of integers representing the indexes of each package on the original list of deliveries.
