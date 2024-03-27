@@ -18,7 +18,7 @@ There are 3 different types of packages: fragile, normal and urgent.
 
 For an algorithm to be considered successful it needs to:
 
-* **Maintain a high repution** by keeping packages from breaking and delivering urgent packages on time.
+* **Maintain a high reputation** by keeping packages from breaking and delivering urgent packages on time.
 * **Reduce the total cost** which includes penalties from late deliveries, packages broken and distance travalled.
 
 
