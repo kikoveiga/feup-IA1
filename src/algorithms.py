@@ -32,7 +32,7 @@ def simulated_annealing(neighbor_function: Callable[[list[int]], list[int]], ite
     best_solution = solution
     best_cost = cost
 
-    for _ in range(iterations):
+    for _ in range(iterations): # while temperature > 0:
         neighbor_solution = neighbor_function(solution)
         neighbor_cost = evaluate_solution(neighbor_solution)
         delta = cost - neighbor_cost

@@ -1,5 +1,4 @@
 import random, pandas as pd, numpy as np
-from typing import Callable
 from constraints import map_size, num_packages, speed, cost_per_km, penalty_cost_per_minute, reputation_weight
 
 class Package:
