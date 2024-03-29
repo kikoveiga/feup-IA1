@@ -36,7 +36,7 @@ def hill_climbing(neighbor_function: Callable [[list[int]], list[int]], iteratio
 
 # simulated annealing
 def simulated_annealing(neighbor_function: Callable[[list[int]], list[int]], iterations: int = 1000, temperature: float = 1.0, cooling: float = 0.0) -> list[int]:
-    solution = generate_random_solution()
+    solution: list[int] = generate_random_solution()
     cost = evaluate_solution(solution)
     best_solution = solution
     best_cost = cost
@@ -68,11 +68,11 @@ def tabu_search(tabu_list_size: int = 100, iterations: int = 1000) -> list[int]:
     best_solution: list[int] = initial_solution
     best_cost: float = evaluate_solution(best_solution)
     current_solution: list[int] = initial_solution
-    tabu_list: list[tuple[int]] = []
+    tabu_list: list[tuple[int, ...]] = []
 
     for _ in range(iterations):
         neighbors: list[list[int]] = get_all_neighbors(current_solution)
-        neighbors_filtered: list[tuple[int]] = [tuple(solution) for solution in neighbors if tuple(solution) not in tabu_list]
+        neighbors_filtered: list[tuple[int, ...]] = [tuple(solution) for solution in neighbors if tuple(solution) not in tabu_list]
 
         if not neighbors:
             break
@@ -83,7 +83,7 @@ def tabu_search(tabu_list_size: int = 100, iterations: int = 1000) -> list[int]:
         if next_cost < best_cost:
             best_solution, best_cost = next_solution, next_cost
 
-        tabu_list.append(next_solution)
+        tabu_list.append(tuple(next_solution))
         if len(tabu_list) > tabu_list_size:
             tabu_list.pop(0)
         
@@ -185,7 +185,7 @@ def roulette_wheel_selection(population: list[list[int]]) -> list[int]:
 
 # Randomly chooses between tournament selection and roulette wheel selection
 def random_selection(population : list[list[int]], tournament_size = 20) -> list[int]:
-    selection_function: Callable[..., list[int]] = random.choice([tournament_selection, roulette_wheel_selection])
+    selection_function: function = random.choice([tournament_selection, roulette_wheel_selection])
     if selection_function == tournament_selection:
         return selection_function(population, tournament_size)
     else:

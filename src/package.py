@@ -45,8 +45,8 @@ def is_damaged(package: Package, distance_covered: float) -> bool:
     p_damage = 1 - (1 - package.breaking_chance)**distance_covered
     return random.uniform(0, 1) < p_damage
 
-def generate_random_solution():
-    return np.random.choice(range(num_packages), num_packages, replace=False)
+def generate_random_solution() -> list[int]:
+    return random.sample(range(num_packages), num_packages)
 
 def calculate_unexpected_cost(package: Package, distance_covered: float, penalty_cost_per_minute: float) -> float:
     cost: float = 0

@@ -99,7 +99,7 @@ def simulated_annealing_menu():
     if show_map:
         print_packages_on_map(package_stream)
     # Call simulated annealing algorithm function with specified parameters
-    solution = simulated_annealing(iterations, temperature, cooling)
+    solution = simulated_annealing(get_neighbor_solution, iterations, temperature, cooling)
     print(f"Best Solution: {solution}")
     print(f"Cost: {evaluate_solution(solution)}")
 
