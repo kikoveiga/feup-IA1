@@ -2,17 +2,18 @@ import random, pandas as pd, numpy as np
 from constraints import map_size, num_packages, speed, cost_per_km, penalty_cost_per_minute, reputation_weight
 
 class Package:
-    def __init__(self, package_type, coordinates):
+    def __init__(self: 'Package', package_type: str, coordinates: tuple[float, float]):
         self.package_type: str = package_type
-        self.coordinates_x: int = coordinates[0]
-        self.coordinates_y: int = coordinates[1]
+        self.coordinates_x: float = coordinates[0]
+        self.coordinates_y: float = coordinates[1]
         if package_type == 'fragile':
             self.breaking_chance = random.uniform(0.0001, 0.01) # 0.01-1%chance of breaking per km
             self.breaking_cost = random.uniform(3, 10) # Extra cost in case of breaking
         elif package_type == 'urgent':
             self.delivery_time = random.uniform(100, 240) # Delivery time in minutes (100 minutes to 4 hours)
-            
-    def generate_package_stream(num_packages, map_size):
+    
+    @staticmethod
+    def generate_package_stream(num_packages: int, map_size: int) -> list['Package']:
         package_types = ['fragile', 'normal', 'urgent']
         package_stream = [Package(random.choice(package_types),(random.uniform(0, map_size), random.uniform(0, map_size))) for _ in range(num_packages)]
         return package_stream

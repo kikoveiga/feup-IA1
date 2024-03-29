@@ -1,22 +1,31 @@
 import random, copy, numpy as np
-from typing import Callable
+from typing import Callable, Tuple
 from constraints import num_packages
 from package import evaluate_solution, generate_random_solution
 
-# switches 2 random packages in the final solution
+# switches 2 random packages in the solution
 def get_neighbor_solution(solution: list[int]) -> list[int]:
-    neighbor_solution = copy.deepcopy(solution)
+    neighbor_solution: list[int] = copy.deepcopy(solution)
     i, j = random.sample(range(len(solution)), 2)
     neighbor_solution[i], neighbor_solution[j] = neighbor_solution[j], neighbor_solution[i]
     return neighbor_solution
 
-def hill_climbing(neighbor_function: Callable [[list[int]], list[int]], iterations: int = 1000) -> list[int]:
+def get_all_neighbors(solution: list[int]) -> list[list[int]]:
+    neighbors: list[list[int]] = []
+    for i in range(len(solution)):
+        for j in range(i+1, len(solution)):
+            neighbor: list[int] = solution.copy()
+            neighbor[i], neighbor[j] = neighbor[j], neighbor[i]
+            neighbors.append(neighbor)
+    return neighbors
 
-    best_solution = random.sample(range(num_packages), num_packages)
+def hill_climbing(neighbor_function: Callable [[list[int]], list[int]], iterations: int = 1000) -> Tuple[list[int], float]:
+
+    best_solution: list[int] = random.sample(range(num_packages), num_packages)
     best_cost = evaluate_solution(best_solution)
 
     for _ in range(iterations):
-        solution = neighbor_function(best_solution)
+        solution: list[int] = neighbor_function(best_solution)
         cost = evaluate_solution(solution)
 
         if cost < best_cost:
@@ -32,11 +41,16 @@ def simulated_annealing(neighbor_function: Callable[[list[int]], list[int]], ite
     best_solution = solution
     best_cost = cost
 
-    for _ in range(iterations): # while temperature > 0:
-        neighbor_solution = neighbor_function(solution)
+    for _ in range(int(iterations)):
+
+        if temperature <= 0:
+            break
+        
+        neighbor_solution:list[int] = neighbor_function(solution)
         neighbor_cost = evaluate_solution(neighbor_solution)
         delta = cost - neighbor_cost
         acceptance_probability = np.exp(delta / temperature)
+
         
         if neighbor_cost < cost or random.random() < acceptance_probability:
             solution = neighbor_solution
@@ -49,6 +63,33 @@ def simulated_annealing(neighbor_function: Callable[[list[int]], list[int]], ite
         temperature *= 1 - cooling
     return best_solution
 
+def tabu_search(tabu_list_size: int = 100, iterations: int = 1000) -> list[int]:
+    initial_solution: list[int] = generate_random_solution()
+    best_solution: list[int] = initial_solution
+    best_cost: float = evaluate_solution(best_solution)
+    current_solution: list[int] = initial_solution
+    tabu_list: list[tuple[int]] = []
+
+    for _ in range(iterations):
+        neighbors: list[list[int]] = get_all_neighbors(current_solution)
+        neighbors_filtered: list[tuple[int]] = [tuple(solution) for solution in neighbors if tuple(solution) not in tabu_list]
+
+        if not neighbors:
+            break
+
+        next_solution: list[int] = min(neighbors, key=lambda solution: evaluate_solution(solution))
+        next_cost: float = evaluate_solution(next_solution)
+
+        if next_cost < best_cost:
+            best_solution, best_cost = next_solution, next_cost
+
+        tabu_list.append(next_solution)
+        if len(tabu_list) > tabu_list_size:
+            tabu_list.pop(0)
+        
+        current_solution = next_solution
+
+    return best_solution
 
 
 # Genetic Algorithm 
@@ -78,31 +119,31 @@ def pmx_crossover(solution_1, solution_2):
 
 # mutation functions
 
-def swap_mutation(solution):
-    index_1 = np.random.randint(0, len(solution))
-    index_2 = (index_1 + np.random.randint(0, len(solution))) % (len(solution) - 1)
+def swap_mutation(solution: list[int]) -> list[int]:
+    index_1: int = np.random.randint(0, len(solution))
+    index_2: int = (index_1 + np.random.randint(0, len(solution))) % (len(solution) - 1)
     solution[index_1], solution[index_2] = solution[index_2], solution[index_1]
     return solution
 
 
 def inversion_mutation(solution : list[int])-> list[int]:
-    index_1 = np.random.randint(0, len(solution))
-    index_2 = (index_1 + np.random.randint(0, len(solution))) % (len(solution) - 1)
+    index_1: int = np.random.randint(0, len(solution))
+    index_2: int = (index_1 + np.random.randint(0, len(solution))) % (len(solution) - 1)
     if index_1 > index_2:
         index_1, index_2 = index_2, index_1
     solution[index_1:index_2] = solution[index_1:index_2][::-1]
     return solution
 
 def scramble_mutation(solution: list[int])-> list[int]: 
-    index_1 = np.random.randint(0, len(solution))
-    index_2 = (index_1 + np.random.randint(0, len(solution))) % (len(solution) - 1)
+    index_1: int = np.random.randint(0, len(solution))
+    index_2: int = (index_1 + np.random.randint(0, len(solution))) % (len(solution) - 1)
     if index_1 > index_2:
         index_1, index_2 = index_2, index_1
     np.random.shuffle(solution[index_1:index_2])
     return solution
 
 def random_mutation(solution : list[int]) -> list[int]:
-    mutation = np.random.choice([swap_mutation, inversion_mutation, scramble_mutation])
+    mutation = random.choice([swap_mutation, inversion_mutation, scramble_mutation])
     return mutation(solution)
 
 # selection functions
@@ -121,14 +162,14 @@ def greatest_fit(population: list[list[int]]) -> list[int]:  # podemos ter de re
     return best_solution
     
 # Returns a list of random solutions
-def generate_population(population_size :int)-> list[int]:
+def generate_population(population_size :int)-> list[list[int]]:
     solutions = []
     for _ in range(population_size):
         solutions.append(generate_random_solution())
     return solutions
 
 # Randomly chooses tournament_size solutions from the population and returns the one with the highest scores
-def tournament_selection(population :list[list[int]], tournament_size:int = 20):
+def tournament_selection(population :list[list[int]], tournament_size:int = 20) -> list[int]:
     if len(population) < tournament_size:
         return greatest_fit(population)
     participants = random.sample(population, tournament_size)
@@ -144,7 +185,7 @@ def roulette_wheel_selection(population: list[list[int]]) -> list[int]:
 
 # Randomly chooses between tournament selection and roulette wheel selection
 def random_selection(population : list[list[int]], tournament_size = 20) -> list[int]:
-    selection_function = np.random.choice([tournament_selection, roulette_wheel_selection])
+    selection_function: Callable[..., list[int]] = random.choice([tournament_selection, roulette_wheel_selection])
     if selection_function == tournament_selection:
         return selection_function(population, tournament_size)
     else:
