@@ -1,4 +1,4 @@
-from package import Package
+from package import Package, generate_package_stream
 from algorithms import hill_climbing, simulated_annealing, tabu_search, genetic_algorithm, pmx_crossover, get_neighbor_solution, evaluate_solution
 from constraints import num_packages, map_size
 
@@ -13,9 +13,8 @@ test_packages: list[Package] = [Package('urgent', (56.97556558957435, 27.9004510
                                 Package('fragile', (43.662203998731016, 33.37818643749602)),
                                 Package('urgent', (23.530958559725182, 3.3941997983349426))]
 
-package_stream = test_packages
-
-show_map = True
+package_stream: list[Package] = generate_package_stream(num_packages, map_size)
+show_map: bool = True
 
 class icons:
     TOP_LEFT = '\u250f'
