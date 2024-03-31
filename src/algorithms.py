@@ -190,9 +190,9 @@ def roulette_wheel_selection(package_stream: list[Package], population: list[lis
 def random_selection(package_stream: list[Package], population : list[list[int]], tournament_size = 20) -> list[int]:
     selection_function: function = random.choice([tournament_selection, roulette_wheel_selection])
     if selection_function == tournament_selection:
-        return selection_function(package_stream, population, tournament_size)
+        return tournament_selection(package_stream, population, tournament_size)
     else:
-        return selection_function(package_stream, population)
+        return roulette_wheel_selection(package_stream, population)
 
 
 # Perguntar ao stor como é que devemos fazer a seleção dos pais da próxima geração
@@ -229,9 +229,9 @@ def genetic_algorithm(package_stream: list[Package], crossover_function, populat
 if __name__ == "__main__":
     
     # Test Hill Climbing
-    print("Hill Climbing:")
-    solution, cost = hill_climbing(generate_package_stream(), get_neighbor_solution, iterations=1000000)
-    print(f"Best solution: {solution} and cost: {cost}")
+    #print("Hill Climbing:")
+    #solution, cost = hill_climbing(generate_package_stream(), get_neighbor_solution, iterations=1000000)
+    #print(f"Best solution: {solution} and cost: {cost}")
 
     # Test SA
     solution, cost = simulated_annealing(generate_package_stream(), get_neighbor_solution)
