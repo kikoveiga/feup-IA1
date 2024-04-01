@@ -21,7 +21,7 @@ class Package:
 
         if self.package_type == 'urgent' and self.delivery_time < distance_covered / speed * 60:
             penalty = (distance_covered / speed * 60 - self.delivery_time) * penalty_cost_per_minute
-            cost -= penalty
+            cost += penalty
 
         if self.package_type == 'fragile' and self.is_damaged(distance_covered):
             cost += self.breaking_cost
@@ -52,7 +52,7 @@ def evaluate_solution(package_stream: list[Package], solution: list[int]) -> flo
     reputation_cost: float = 0
 
     distance_covered += package_stream[solution[0]].distance((0, 0))
-    total_cost += distance_covered * cost_per_km + package_stream[solution[0]].calculate_unexpected_cost(distance_covered, penalty_cost_per_minute)
+    total_cost += (1 - reputation_weight) * distance_covered * cost_per_km + reputation_weight * package_stream[solution[0]].calculate_unexpected_cost(distance_covered, penalty_cost_per_minute)
 
     for i in range(1, len(solution)):
         distance_covered += package_stream[solution[i]].distance((package_stream[solution[i - 1]].coordinates_x, package_stream[solution[i - 1]].coordinates_y))
@@ -62,15 +62,14 @@ def evaluate_solution(package_stream: list[Package], solution: list[int]) -> flo
         total_cost += (1 - reputation_weight) * distance_cost + reputation_weight * reputation_cost
     return total_cost
 
-# function to evaluate the cost of a neighbour solution more efficiently than evaluating the whole solution again
-#def evaluate_neighbour_solution(solution: list[int], cost: int, index_1: int, index_2: int) -> float:
-
 if __name__ == "__main__":
+
+    print(generate_random_solution())
 
     package_stream = generate_package_stream(num_packages, map_size)
     solution = generate_random_solution()
     for _ in range(10):
-        print(evaluate_solution(package_stream, solution))
+        print(round(evaluate_solution(package_stream, solution), 2))
 
 
     df = pd.DataFrame([(i, package.package_type, package.coordinates_x, package.coordinates_y,

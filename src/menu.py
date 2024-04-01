@@ -1,5 +1,5 @@
 from package import Package, generate_package_stream
-from algorithms import hill_climbing, simulated_annealing, tabu_search, genetic_algorithm, pmx_crossover, get_neighbor_solution, evaluate_solution
+from algorithms import hill_climbing, simulated_annealing, tabu_search, genetic_algorithm, pmx_crossover, get_random_neighbor, evaluate_solution, get_best_neighbor
 from constraints import num_packages, map_size
 
 test_packages: list[Package] = [Package('urgent', (56.97556558957435, 27.90045109824626)),
@@ -13,7 +13,7 @@ test_packages: list[Package] = [Package('urgent', (56.97556558957435, 27.9004510
                                 Package('fragile', (43.662203998731016, 33.37818643749602)),
                                 Package('urgent', (23.530958559725182, 3.3941997983349426))]
 
-package_stream: list[Package] = generate_package_stream(num_packages, map_size)
+package_stream: list[Package] = test_packages
 show_map: bool = True
 
 class icons:
@@ -86,7 +86,7 @@ def hill_climbing_menu():
 
     if show_map:
         print_packages_on_map(package_stream)
-    solution, cost = hill_climbing(get_neighbor_solution, iterations)
+    solution, cost = hill_climbing(package_stream, get_best_neighbor, iterations)
     print(f"Best Solution: {solution}")
     print(f"Cost: {round(cost, 2)}")
 
@@ -97,10 +97,10 @@ def simulated_annealing_menu():
     cooling = float(input("Cooling Rate: "))
     if show_map:
         print_packages_on_map(package_stream)
-    # Call simulated annealing algorithm function with specified parameters
-    solution = simulated_annealing(get_neighbor_solution, iterations, temperature, cooling)
+    # Call simulated annealing function with specified parameters
+    solution, cost = simulated_annealing(package_stream, iterations, temperature, cooling)
     print(f"Best Solution: {solution}")
-    print(f"Cost: {evaluate_solution(solution)}")
+    print(f"Cost: {round(cost, 2)}")
 
 def tabu_search_menu():
     print_menu_title_box("Tabu Search Menu")
@@ -108,10 +108,10 @@ def tabu_search_menu():
     iterations = int(input("Number of Iterations: "))
     if show_map:
         print_packages_on_map(package_stream)
-    # Call tabu search algorithm function with specified parameters
-    solution = tabu_search(tabu_list_size, iterations)
+    # Call tabu search function with specified parameters
+    solution, cost = tabu_search(package_stream, tabu_list_size, iterations)
     print(f"Best Solution: {solution}")
-    print(f"Cost: {evaluate_solution(solution)}")
+    print(f"Cost: {round(cost, 2)}")
 
 def genetic_algorithm_menu():
     print_menu_title_box("Genetic Algorithm Menu")
@@ -174,9 +174,9 @@ def change_num_packages():
 def display_menu():
     print_menu_title_box("Main Menu")
     print("Welcome to the Package Delivery System:")
-    print("1. Run Hill Climbing Algorithm")
-    print("2. Run Simulated Annealing Algorithm")
-    print("3. Run Tabu Search Algorithm")
+    print("1. Run Hill Climbing (with Best Neighbor)")
+    print("2. Run Simulated Annealing")
+    print("3. Run Tabu Search")
     print("4. Run Genetic Algorithm")
     print("5. Settings")
     print("6. Exit")

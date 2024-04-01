@@ -31,18 +31,29 @@ mypy src/
 
 Note that this is not mandatory, but it can help in understanding the code and finding some typing errors.
 
+After, running the main file, the user arrives at the main menu, where he can choose between the following options:
+![main menu](resources/main_menu.png)
+
+Inside an algorithm/ heuristic menu, the user can choose its parameters:
+![hill climbing menu](resources/hill_menu.png)
+
+The list of packages and the best solution found are nicely displayed as follows:
+![solution](resources/solution.png)
+
+- `X` represents the starting point of the vehicle.
+- The numbers represent each package, and its color dependes on the type.
+
 ## Problem Definition
-specification of the work to be performed (definition of the game or optimization problem to be solved)
 
 This project has as its objective to optimize the delivery of packages from a starting point (0,0) to various destinations, optimizing the travel costs while adhering to each package type's special needs.
-It can be succintly described as follow.
+It can be succintly described as follows.
 
 ### Scenario
 
-There are 3 different types of packages: fragile, normal and urgent.
+There are 3 different types of packages: **fragile**, **normal** and **urgent**.
 
-* Fragile packages have a change of getting damaged by kilometer traveled.
-* Urgent packages have a penalty associated with delays.
+* **Fragile** packages have a change of getting damaged by kilometer traveled.
+* **Urgent** packages have a penalty associated with delays.
 * Each kilometer traveled incurs a fixed cost.
 
 ### Objective
@@ -58,15 +69,11 @@ For an algorithm to be considered successful it needs to:
 For this project the world will always follow some rules:
 
 * Only one vehicle is available.
-* Delivery locations are specified by a pair of coordinates (x,y)
+* Delivery locations are specified by a pair of coordinates (x,y).
 * There are always direct routes between all delivery places.
 * The vehicle travels at a constant speed of 60km/hour
-* The cost per kilometer is fixed
-* The delivery staff takes 0 seconds to deliver each package
-  
-
-## References / Src code
-related work with references to works found in a bibliographic search (articles, web pages and/or source code)
+* The cost per kilometer is fixed.
+* The delivery staff takes 0 seconds to deliver each package.
 
 ###  Solution Representation
 
