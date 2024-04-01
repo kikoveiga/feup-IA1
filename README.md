@@ -32,12 +32,15 @@ mypy src/
 Note that this is not mandatory, but it can help in understanding the code and finding some typing errors.
 
 After, running the main file, the user arrives at the main menu, where he can choose between the following options:
+
 ![main menu](resources/main_menu.png)
 
 Inside an algorithm/ heuristic menu, the user can choose its parameters:
+
 ![hill climbing menu](resources/hill_menu.png)
 
 The list of packages and the best solution found are nicely displayed as follows:
+
 ![solution](resources/solution.png)
 
 - `X` represents the starting point of the vehicle.
