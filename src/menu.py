@@ -122,7 +122,7 @@ def genetic_algorithm_menu():
     if show_map:
         print_packages_on_map(package_stream)
     # Call genetic algorithm function with specified parameters
-    solution, cost = genetic_algorithm(pmx_crossover, population_size, generations, mutation_rate)
+    solution, cost = genetic_algorithm(package_stream, pmx_crossover, population_size, generations, mutation_rate)
     print(f"Best Solution: {solution}")
     print(f"Cost: {round(cost, 2)}")
 

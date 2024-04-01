@@ -176,7 +176,6 @@ def swap_mutation(solution: list[int]) -> list[int]:
     solution[index_1], solution[index_2] = solution[index_2], solution[index_1]
     return solution
 
-
 def inversion_mutation(solution : list[int])-> list[int]:
     index_1: int = np.random.randint(0, len(solution))
     index_2: int = (index_1 + np.random.randint(0, len(solution))) % (len(solution) - 1)
@@ -238,11 +237,6 @@ def random_selection(package_stream: list[Package], population : list[list[int]]
     else:
         return roulette_wheel_selection(package_stream, population)
 
-
-# Perguntar ao stor como é que devemos fazer a seleção dos pais da próxima geração
-# 2 childs por cada ou só uma?
-# podemos ter de alterar o crossover para simplificar
-# Também podemos adicionar o tamanho do torneio como argumento da função. Para já estamos a usar um default
 def genetic_algorithm(package_stream: list[Package], crossover_function, population_size=100, generations=1000, mutation_rate=0.01):
     population = generate_population(population_size)
     best_solution = population[0]
@@ -261,17 +255,17 @@ def genetic_algorithm(package_stream: list[Package], crossover_function, populat
             child1, child2 = crossover_function(parent1, parent2)
             if np.random.rand() < mutation_rate:
                 child1 = random_mutation(child1)
-            # if np.random.rand() < mutation_rate:
-            #     child2 = random_mutation(child2)
+            #if np.random.rand() < mutation_rate:
+                 #child2 = random_mutation(child2)
             new_population.append(child1)
-            # new_population.append(child2)
+            #new_population.append(child2)
 
         population = new_population
 
     return best_solution, best_cost
 
 def test_first_better_neighbor():
-    print("Hill Climbing: (First better neighbor):")
+    print("Hill Climbing (First better neighbor):")
     solution, cost = hill_climbing(test_packages, get_first_better_neighbor, iterations=1000)
     print(f"{solution} -> {round(cost, 2)} -> iterations = 1000")
     solution, cost = hill_climbing(test_packages, get_first_better_neighbor, iterations=10000)
@@ -326,11 +320,12 @@ def test_tabu_search():
     print(f"{solution} -> {round(cost, 2)} -> tabu_list_size = 100 iterations = 100000")
     solution, cost = tabu_search(test_packages, tabu_list_size=1000, iterations=100000)
     print(f"{solution} -> {round(cost, 2)} -> tabu_list_size = 1000 iterations = 100000")
-    solution, cost = tabu_search(test_packages, tabu_list_size=100, iterations=1000000)
-    print(f"{solution} -> {round(cost, 2)} -> tabu_list_size = 100 iterations = 1000000")
-    solution, cost = tabu_search(test_packages, tabu_list_size=1000, iterations=1000000)
-    print(f"{solution} -> {round(cost, 2)} -> tabu_list_size = 1000 iterations = 1000000")
     print()
+
+def test_genetic_algorithm():
+    print("Genetic Algorithm:")
+    solution, cost = genetic_algorithm(test_packages, pmx_crossover, population_size=100, generations=1000, mutation_rate=0.01)
+    print(f"{solution} -> {round(cost, 2)} -> population_size = 100 generations = 1000 mutation_rate = 0.01")
 
 if __name__ == "__main__":
     
@@ -339,4 +334,5 @@ if __name__ == "__main__":
     test_random_neighbor()
     test_simulated_annealing()
     test_tabu_search()
+    test_genetic_algorithm()
 
