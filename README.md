@@ -1,5 +1,36 @@
 # IA1
 
+## Introduction
+
+This is the first Practical Assignment for the Artificial Intelligence course (IA) 2023/2024 @ FEUP. For this project, we chose the topic **Delivery Scheduling** (3C), an Optimization Problem which description can be found [here](Description.pdf).
+
+Our group is *Group_A1_44*, composed of:
+- João Mendes Silva Belchior (up202108777@up.pt)
+- José Francisco Reis Pedreiras Neves Veiga (up202108753@up.pt)
+- Pedro Vidal Marcelino (up202108754@up.pt)
+
+## Execution
+
+This project was developed using Python and some external libraries like `numpy` and `pandas`. To run the project, you need to have Python installed on your machine. To install the required libraries, you can run the following command:
+
+```bash
+pip install numpy pandas
+```
+
+Then, just run the main file inside the `src` folder:
+
+```bash
+python3 main.py
+```
+
+We also used typing hints in our code, and checked the integrity of the code using the library `mypy`. It can be installed with `pip` like the other libraries, and used as follows:
+
+```bash
+mypy src/
+```
+
+Note that this is not mandatory, but it can help in understanding the code and finding some typing errors.
+
 ## Problem Definition
 specification of the work to be performed (definition of the game or optimization problem to be solved)
 
