@@ -13,7 +13,7 @@ test_packages: list[Package] = [Package('urgent', (56.97556558957435, 27.9004510
                                 Package('fragile', (43.662203998731016, 33.37818643749602)),
                                 Package('urgent', (23.530958559725182, 3.3941997983349426))]
 
-package_stream: list[Package] = test_packages
+package_stream: list[Package] = generate_package_stream(num_packages, map_size)
 show_map: bool = True
 
 class icons:
@@ -158,15 +158,18 @@ def change_map_size():
     new_size = int(input("Enter the new map size: "))
     if new_size > 0:
         map_size = new_size
+        package_stream = generate_package_stream(num_packages, map_size)
         print("Map size updated successfully.")
     else:
         print("Invalid map size. Please enter a positive integer.")
 
 def change_num_packages():
     global num_packages
+    global package_stream
     new_packages = int(input("Enter the new number of packages: "))
     if new_packages > 0:
         num_packages = new_packages
+        package_stream = generate_package_stream(num_packages, map_size)
         print("Number of packages updated successfully.")
     else:
         print("Invalid number of packages. Please enter a positive integer.")
